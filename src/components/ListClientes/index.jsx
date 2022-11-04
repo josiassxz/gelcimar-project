@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import '../../App.css';
 import MaterialTable from 'material-table'
+import * as axios from 'axios';
 
-const empList = [
-    { id: 1, name: "Neeraj", email: 'neeraj@gmail.com', status: 0, role: 1 },
-    { id: 2, name: "Raj", email: 'raj@gmail.com', status: 1, role: 0 },
-    { id: 3, name: "David", email: 'david342@gmail.com', status: 1, role: 3 },
-    { id: 4, name: "Vikas", email: 'vikas75@gmail.com', status: 0, role: 2 },
-]
+
 
 function App() {
 
-    const [data, setData] = useState(empList)
+    const url = 'http://localhost:8080/api/clientes';
+
+    const [data, setData] = useState([])
     const columns = [
         { title: "ID", field: "id" },
-        { title: "Name", field: "name" },
-        { title: "Email", field: "email" },
-        { title: "Status", field: 'status', },
-        { title: "Role", field: "role", }
+        { title: "Cliente", field: "cliente" },
+        { title: "Deve Sucata", field: "deveKg" },
+        { title: "Deve Dinheiro", field: 'deveDinheiro', },
+        { title: "Haver Sucata", field: "haverSucata", },
+        { title: "Ultima Alteração", field: "ultimaAlteracao", },
+        { title: "Deve Boleto", field: "deveBoleto", },
     ]
+
+
+
+
+    const getClientes = async () =>{
+        try {
+            const response = await axios.get(url)
+            setData(response.data);
+
+        } catch (error){
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getClientes();
+    }, [])
 
 
     return (
@@ -26,9 +43,27 @@ function App() {
             <h1 align="center">React-App</h1>
             <h4 align='center'>Material Table</h4>
             <MaterialTable
-                title="Employee Data"
+                title="Lista de CLientes"
                 data={data}
                 columns={columns}
+                options={{
+                    actionsColumnIndex:-1, addRowPosition: "first"
+                }}
+                editable={{
+                    onRowAdd:(newData) => new Promise((resolve, reject) => {
+                        //BackEnd call
+                        fetch(url,{
+                            method: "POST",
+                            headers:{
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(newData)
+                        }).then(resp=>resp.json())
+                            .then(resp=>{getClientes()
+                                resolve();
+                            })
+                    })
+                }}
             />
         </div>
     );
