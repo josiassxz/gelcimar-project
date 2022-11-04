@@ -62,6 +62,44 @@ function App() {
                             .then(resp=>{getClientes()
                                 resolve();
                             })
+                    }),
+                    // onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => {
+                    //     //BackEnd call
+                    //     return fetch(url+"/"+oldData.id,{
+                    //         method: "PUT",
+                    //         headers:{
+                    //             "Content-Type": "application/json"
+                    //         },
+                    //         body: JSON.stringify(newData)
+                    //     }).then(resp=>resp.json())
+                    //         .then(resp=>{getClientes()
+                    //             resolve();
+                    //         })
+                    // }),
+                    onRowUpdate:(newData,oldData) => new Promise((resolve, reject) => {
+                        //BackEnd call
+                        fetch(url+'/'+oldData.id,{
+                            method: "PUT",
+                            headers:{
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(newData)
+                        }).then(resp=>resp.json())
+                            .then(resp=>{getClientes()
+                                resolve();
+                            })
+                    }),
+                    onRowDelete:(oldData)=> new Promise((resolve, reject) => {
+                        //BackEnd call
+                          fetch(url+"/"+oldData.id,{
+                            method: "DELETE",
+                            headers:{
+                                "Content-Type": "application/json"
+                            },
+                        }).then(resp=>resp.json())
+                            .then(resp=>{getClientes()
+                                resolve();
+                            })
                     })
                 }}
             />
