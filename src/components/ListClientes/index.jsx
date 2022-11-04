@@ -33,6 +33,18 @@ function App() {
         }
     }
 
+    const updateClientes = async () =>{
+        try {
+            const response = await axios.get(url)
+            setData(response.data);
+
+        } catch (error){
+            console.log(error);
+        }
+    }
+
+
+
     useEffect(() => {
         getClientes();
     }, [])
@@ -40,8 +52,6 @@ function App() {
 
     return (
         <div className="App">
-            <h1 align="center">React-App</h1>
-            <h4 align='center'>Material Table</h4>
             <MaterialTable
                 title="Lista de CLientes"
                 data={data}
@@ -50,9 +60,9 @@ function App() {
                     actionsColumnIndex:-1, addRowPosition: "first"
                 }}
                 editable={{
-                    onRowAdd:(newData) => new Promise((resolve, reject) => {
+                     onRowAdd: (newData) => new Promise ((resolve, reject) => {
                         //BackEnd call
-                        fetch(url,{
+                         fetch(url,{
                             method: "POST",
                             headers:{
                                 "Content-Type": "application/json"
@@ -63,41 +73,26 @@ function App() {
                                 resolve();
                             })
                     }),
-                    // onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => {
-                    //     //BackEnd call
-                    //     return fetch(url+"/"+oldData.id,{
-                    //         method: "PUT",
-                    //         headers:{
-                    //             "Content-Type": "application/json"
-                    //         },
-                    //         body: JSON.stringify(newData)
-                    //     }).then(resp=>resp.json())
-                    //         .then(resp=>{getClientes()
-                    //             resolve();
-                    //         })
-                    // }),
                     onRowUpdate:(newData,oldData) => new Promise((resolve, reject) => {
                         //BackEnd call
-                        fetch(url+'/'+oldData.id,{
+                         fetch(url+'/'+oldData.id,{
                             method: "PUT",
                             headers:{
                                 "Content-Type": "application/json"
                             },
                             body: JSON.stringify(newData)
-                        }).then(resp=>resp.json())
-                            .then(resp=>{getClientes()
+                        }).then(()=>{getClientes()
                                 resolve();
                             })
                     }),
                     onRowDelete:(oldData)=> new Promise((resolve, reject) => {
                         //BackEnd call
-                          fetch(url+"/"+oldData.id,{
+                           fetch(url+"/"+oldData.id,{
                             method: "DELETE",
                             headers:{
                                 "Content-Type": "application/json"
                             },
-                        }).then(resp=>resp.json())
-                            .then(resp=>{getClientes()
+                        }).then(()=>{getClientes()
                                 resolve();
                             })
                     })
