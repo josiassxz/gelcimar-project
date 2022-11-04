@@ -16,7 +16,7 @@ function App() {
         { title: "Deve Sucata", field: "deveKg" },
         { title: "Deve Dinheiro", field: 'deveDinheiro', },
         { title: "Haver Sucata", field: "haverSucata", },
-        { title: "Ultima Alteração", field: "ultimaAlteracao", },
+        { title: "Ultima Alteração", field: "ultimaAlteracao", type: "date" },
         { title: "Deve Boleto", field: "deveBoleto", },
     ]
 
