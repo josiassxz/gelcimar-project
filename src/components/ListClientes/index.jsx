@@ -11,16 +11,14 @@ function App() {
 
     const [data, setData] = useState([])
     const columns = [
-        { title: "ID", field: "id" },
         { title: "Cliente", field: "cliente" },
         { title: "Deve Sucata", field: "deveKg" },
         { title: "Deve Dinheiro", field: 'deveDinheiro', },
         { title: "Haver Sucata", field: "haverSucata", },
-        { title: "Ultima Alteração", field: "ultimaAlteracao", type: "date" },
+        { title: "Ultima Alteração", field: "ultimaAlteracao", type: "date", format: "DD-MM-AAAA",
+            dateSetting: { locale: "pt-BR" },},
         { title: "Deve Boleto", field: "deveBoleto", },
     ]
-
-
 
 
     const getClientes = async () =>{
@@ -32,17 +30,6 @@ function App() {
             console.log(error);
         }
     }
-
-    const updateClientes = async () =>{
-        try {
-            const response = await axios.get(url)
-            setData(response.data);
-
-        } catch (error){
-            console.log(error);
-        }
-    }
-
 
 
     useEffect(() => {
@@ -57,7 +44,8 @@ function App() {
                 data={data}
                 columns={columns}
                 options={{
-                    actionsColumnIndex:-1, addRowPosition: "first"
+                    actionsColumnIndex:-1, addRowPosition: "first",
+                    exportButton: true
                 }}
                 editable={{
                      onRowAdd: (newData) => new Promise ((resolve, reject) => {
