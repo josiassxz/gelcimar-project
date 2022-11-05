@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../../App.css';
-import MaterialTable from 'material-table'
+import MaterialTable,{MTablePagination} from 'material-table'
 import * as axios from 'axios';
+import {Grid, TablePagination} from "@material-ui/core";
+
 
 
 
@@ -10,16 +12,31 @@ function App() {
     const url = 'http://localhost:8080/api/clientes';
 
     const [data, setData] = useState([])
+
+    let totalDeveDinheiro = data.reduce((sum, data) => {
+        return sum + data.deveDinheiro;
+    }, 0);
+
+    let totalDeveSucata = data.reduce((sum, data) => {
+        return sum + data.deveKg;
+    }, 0);
+
+    let totalHaverSucata = data.reduce((sum, data) => {
+        return sum + data.haverSucata;
+    }, 0);
+
+
+
     const columns = [
         { title: "Cliente", field: "cliente" },
         { title: "Deve Sucata", field: "deveKg" },
-        { title: "Deve Dinheiro", field: 'deveDinheiro', },
-        { title: "Haver Sucata", field: "haverSucata", },
-        { title: "Ultima Alteração", field: "ultimaAlteracao", type: "date", format: "DD-MM-AAAA",
+        { title: "Deve Dinheiro", field: 'deveDinheiro',},
+        { title: "Haver Sucata", field: "haverSucata",},
+        // { title: "Deve Boleto", field: "deveBoleto", },
+        { title: "Rota", field: "rota", },
+        { title: "Ultima Alteração", field:"ultimaAlteracao", type: "date",  disabled: true,
             dateSetting: { locale: "pt-BR" },},
-        { title: "Deve Boleto", field: "deveBoleto", },
     ]
-
 
     const getClientes = async () =>{
         try {
@@ -43,6 +60,14 @@ function App() {
                 title="Lista de CLientes"
                 data={data}
                 columns={columns}
+                components={{
+                    Pagination:(props)=><div>
+                        <Grid container style={{padding:15,background: '#f5f5f5'}}>
+                            <Grid sm={6} item> Total deve sucata: {totalDeveSucata}  | Total deve dinheiro : {totalDeveDinheiro} | Total haver sucata : {totalHaverSucata}</Grid>
+                        </Grid>
+                        <TablePagination{...props}/>
+                    </div>
+                }}
                 options={{
                     actionsColumnIndex:-1, addRowPosition: "first",
                     exportButton: true
